@@ -3,5 +3,5 @@ from .views import ListItemsView
 
 
 urlpatterns = [
-    path('items/', ListItemsView.as_view(), name="items-all")
+    path('search/', ListItemsView.as_view(), name="items-all")
 ]
