@@ -42,3 +42,8 @@ python3 manage.py test
 ```
 
 * Server should be running at http://localhost:8000
+
+Query params that are accepted are: searchTerm, lat and lng
+
+Try visiting: http://localhost:8000/search?searchTerm=camera&lat=51.948&lng=0.172943
+
