@@ -1,10 +1,10 @@
 from django.urls import reverse
 from rest_framework.test import APITestCase, APIClient
 from rest_framework.views import status
-from .models import Items, calculate_distance, closest_items
+from .models import Items
+from .utils import calculate_distance, closest_items
 from .serializers import ItemsSerializer
 
-import pdb
 class BaseViewTest(APITestCase):
     client = APIClient()
 
@@ -19,13 +19,12 @@ class BaseViewTest(APITestCase):
         )
 
     def setUp(self):
-        self.create_item('bike', 10, 10, 'bike.com', 'img-url.com')
-        self.create_item('camera', 55, 30, 'camera.com', 'img-url.com')
-        self.create_item('wings', 20, 14, 'wings.com', 'img-url.com')
-        self.create_item('blender', 12, 40, 'blender.com', 'img-url.com')
+        self.create_item('bike', 10, 10, 'bike.com', '[img-1.com]')
+        self.create_item('camera', 55, 30, 'camera.com', '[img-2.com]')
+        self.create_item('wings', 20, 14, 'wings.com', '[img-3.com]')
+        self.create_item('blender', 12, 40, 'blender.com', '[img-4.com]')
 
 class GetItemsTest(BaseViewTest):
-
     def test_search_with_no_params(self):
         response = self.client.get(reverse('search'))
 
@@ -70,15 +69,12 @@ class HelperFunctions(BaseViewTest):
 
     def test_closest_items_returns_k_closest_items(self):
         points = [
-            { 'distance' : 3},
-            { 'distance' : 4},
-            { 'distance' : 1},
-            { 'distance' : 5}
+            { 'distance' : 3, 'item': 'tripod' },
+            { 'distance' : 4, 'item': 'camera' },
+            { 'distance' : 1, 'item': 'hammer' },
+            { 'distance' : 5, 'item': 'spoon' }
         ]
-        closest_points = closest_items(points, 2)
-        expected = [
-            { 'distance' : 1},
-            { 'distance' : 3}
-        ]
-        self.assertEquals(closest_points, expected)
+        items = closest_items(points, 2)
+        expected = [ 'hammer', 'tripod' ]
+        self.assertEquals(items, expected)
 
